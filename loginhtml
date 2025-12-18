@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | AbrakaHomes</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="navbar">
+    <h1><a href="index.html">AbrakaHomes</a></h1>
+    <nav>
+      <a href="listings.html">Listings</a>
+      <a href="agents.html">Agents</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <section class="page-content">
+    <h2>Login / Register</h2>
+    <form class="login-form">
+      <input type="email" placeholder="Email" required>
+      <input type="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+  </section>
+
+  <footer>© 2025 AbrakaHomes. Built for Abraka.</footer>
+</body>
+</html>
