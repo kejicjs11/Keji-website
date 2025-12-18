@@ -209,3 +209,17 @@ body {
 .whatsapp-btn:hover {
   opacity: 0.85;
   }
+
+.agent-card {
+  background: #161a22;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 500px;
+  margin: 30px auto;
+  text-align: center;
+}
+
+.agent-card h2 {
+  margin-top: 0;
+  color: #4da3ff;
+  }
