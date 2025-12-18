@@ -1,5 +1,3 @@
-function openChat() 
-
 function sendMessage() {
   const input = document.getElementById("messageInput");
   const chatBox = document.getElementById("chatBox");
