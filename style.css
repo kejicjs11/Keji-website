@@ -269,6 +269,15 @@ body {
   border: none;
 }
 
+.chat-btn {
+  background: #4da3ff;
+  color: #000;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-weight: bold;
+  text-decoration: none;
+  }
+
 .chat-input button {
   margin-left: 8px;
   padding: 10px 14px;
