@@ -1,3 +1,8 @@
+const savedChat = localStorage.getItem("abrakaChat");
+if (savedChat) {
+  document.getElementById("chatBox").innerHTML = savedChat;
+}
+
 function sendMessage() {
   const input = document.getElementById("messageInput");
   const chatBox = document.getElementById("chatBox");
@@ -9,6 +14,8 @@ function sendMessage() {
   msg.textContent = input.value;
 
   chatBox.appendChild(msg);
+  localStorage.setItem("abrakaChat", chatBox.innerHTML);
+
   input.value = "";
   chatBox.scrollTop = chatBox.scrollHeight;
 }
