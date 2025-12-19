@@ -287,3 +287,20 @@ body {
   text-decoration: none;
   font-weight: bold;
   }
+
+.chat-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-box {
+  flex: 1;
+}
+
+.chat-input {
+  position: sticky;
+  bottom: 0;
+  background: #0f1115;
+  padding: 10px;
+}
