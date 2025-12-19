@@ -1,4 +1,9 @@
-const savedChat = localStorage.getItem("abrakaChat");
+const params = new URLSearchParams(window.location.search);
+const listingName = params.get("listing") || "general";
+
+const storageKey = "abrakaChat_" + listingName;
+
+const savedChat = localStorage.getItem(storageKey);
 if (savedChat) {
   document.getElementById("chatBox").innerHTML = savedChat;
 }
@@ -14,7 +19,7 @@ function sendMessage() {
   msg.textContent = input.value;
 
   chatBox.appendChild(msg);
-  localStorage.setItem("abrakaChat", chatBox.innerHTML);
+  localStorage.setItem(storageKey, chatBox.innerHTML);
 
   input.value = "";
   chatBox.scrollTop = chatBox.scrollHeight;
