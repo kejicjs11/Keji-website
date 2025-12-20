@@ -1,39 +1,32 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const params = new URLSearchParams(window.location.search);
-  const listing = params.get("listing") || "general";
-  const storageKey = "abrakaChat_" + listing;
+const params = new URLSearchParams(window.location.search);
+const listingName = params.get("listing") || "general";
+const storageKey = "abrakaChat_" + listingName;
 
-  const chatBox = document.getElementById("chat-box");
-  const input = document.getElementById("message-input");
-  const sendBtn = document.getElementById("send-btn");
+const chatBox = document.getElementById("chatBox");
+const input = document.getElementById("messageInput");
+const sendBtn = document.getElementById("sendBtn");
 
-  let messages = JSON.parse(localStorage.getItem(storageKey)) || [];
+// Load saved messages
+const savedChat = localStorage.getItem(storageKey);
+if (savedChat) {
+  chatBox.innerHTML = savedChat;
+}
 
-  function renderMessages() {
-    chatBox.innerHTML = "";
-    messages.forEach(msg => {
-      const div = document.createElement("div");
-      div.className = "message user";
-      div.textContent = msg;
-      chatBox.appendChild(div);
-    });
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
+function sendMessage() {
+  if (input.value.trim() === "") return;
 
-  sendBtn.addEventListener("click", () => {
-    const text = input.value.trim();
-    if (!text) return;
+  const msg = document.createElement("div");
+  msg.className = "message user";
+  msg.textContent = input.value;
 
-    messages.push(text);
-    localStorage.setItem(storageKey, JSON.stringify(messages));
+  chatBox.appendChild(msg);
+  localStorage.setItem(storageKey, chatBox.innerHTML);
 
-    input.value = "";
-    renderMessages();
-  });
+  input.value = "";
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
 
-  input.addEventListener("keypress", e => {
-    if (e.key === "Enter") sendBtn.click();
-  });
-
-  renderMessages();
+sendBtn.addEventListener("click", sendMessage);
+input.addEventListener("keypress", e => {
+  if (e.key === "Enter") sendMessage();
 });
