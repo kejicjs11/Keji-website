@@ -313,11 +313,3 @@ body {
   background: #0f1115;
   padding: 10px;
 }
-
-const params = new URLSearchParams(window.location.search);
-const listingName = params.get("listing");
-
-if (listingName) {
-  document.getElementById("chatTitle").textContent =
-    "Chatting about " + listingName;
-  }
