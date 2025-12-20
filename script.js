@@ -25,29 +25,39 @@ function sendMessage() {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-const chatBox = document.getElementById("chat-box");
-const input = document.getElementById("message-input");
-const sendBtn = document.getElementById("send-btn");
+document.addEventListener("DOMContentLoaded", () => {
 
-let messages = JSON.parse(localStorage.getItem("abrakaChat")) || [];
+  const chatBox = document.getElementById("chat-box");
+  const input = document.getElementById("message-input");
+  const sendBtn = document.getElementById("send-btn");
 
-function renderMessages() {
-  chatBox.innerHTML = "";
-  messages.forEach(msg => {
-    const div = document.createElement("div");
-    div.className = msg.sender;
-    div.textContent = msg.text;
-    chatBox.appendChild(div);
+  const params = new URLSearchParams(window.location.search);
+  const agentName = params.get("agent") || "Agent";
+
+  document.getElementById("chat-title").textContent =
+    "Chat with " + agentName;
+
+  const storageKey = "chat_" + agentName;
+  let messages = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+  function renderMessages() {
+    chatBox.innerHTML = "";
+    messages.forEach(msg => {
+      const div = document.createElement("div");
+      div.className = "message " + msg.sender;
+      div.textContent = msg.text;
+      chatBox.appendChild(div);
+    });
+  }
+
+  sendBtn.addEventListener("click", () => {
+    if (input.value.trim() === "") return;
+
+    messages.push({ sender: "user", text: input.value });
+    localStorage.setItem(storageKey, JSON.stringify(messages));
+    input.value = "";
+    renderMessages();
   });
-}
 
-sendBtn.addEventListener("click", () => {
-  if (input.value.trim() === "") return;
-
-  messages.push({ sender: "user", text: input.value });
-  localStorage.setItem("abrakaChat", JSON.stringify(messages));
-  input.value = "";
   renderMessages();
 });
-
-renderMessages();
