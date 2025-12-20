@@ -1,4 +1,12 @@
 const params = new URLSearchParams(window.location.search);
+const agentName = params.get("agent");
+
+if (agentName) {
+  document.getElementById("chatTitle").textContent =
+    "Chat with " + agentName;
+}
+
+const params = new URLSearchParams(window.location.search);
 const listingName = params.get("listing") || "general";
 
 const storageKey = "abrakaChat_" + listingName;
