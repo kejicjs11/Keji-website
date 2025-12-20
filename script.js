@@ -1,18 +1,13 @@
-const params = new URLSearchParams(window.location.search);
-const listingName = params.get("listing") || "general";
-const storageKey = "abrakaChat_" + listingName;
-
-const chatBox = document.getElementById("chatBox");
-const input = document.getElementById("messageInput");
-const sendBtn = document.getElementById("sendBtn");
-
-// Load saved messages
-const savedChat = localStorage.getItem(storageKey);
+// Load saved chat
+const savedChat = localStorage.getItem("abrakaChat");
 if (savedChat) {
-  chatBox.innerHTML = savedChat;
+  document.getElementById("chatBox").innerHTML = savedChat;
 }
 
 function sendMessage() {
+  const input = document.getElementById("messageInput");
+  const chatBox = document.getElementById("chatBox");
+
   if (input.value.trim() === "") return;
 
   const msg = document.createElement("div");
@@ -20,13 +15,10 @@ function sendMessage() {
   msg.textContent = input.value;
 
   chatBox.appendChild(msg);
-  localStorage.setItem(storageKey, chatBox.innerHTML);
+
+  // Save chat
+  localStorage.setItem("abrakaChat", chatBox.innerHTML);
 
   input.value = "";
   chatBox.scrollTop = chatBox.scrollHeight;
 }
-
-sendBtn.addEventListener("click", sendMessage);
-input.addEventListener("keypress", e => {
-  if (e.key === "Enter") sendMessage();
-});
