@@ -8,56 +8,48 @@ if (agentName) {
   }
 }
 
-const params = new URLSearchParams(window.location.search);
-const listingName = params.get("listing") || "general";
+// ----- CHAT PAGE SAFE LOGIC -----
 
-const storageKey = "abrakaChat_" + listingName;
+document.addEventListener("DOMContentLoaded", () => {
 
-const savedChat = localStorage.getItem(storageKey);
-if (savedChat) {
-  document.getElementById("chatBox").innerHTML = savedChat;
-}
-
-function sendMessage() {
-  const input = document.getElementById("messageInput");
   const chatBox = document.getElementById("chatBox");
+  const input = document.getElementById("messageInput");
 
-  if (input.value.trim() === "") return;
+  // If this page has no chat, stop here safely
+  if (!chatBox || !input) return;
 
-  const msg = document.createElement("div");
-  msg.className = "message user";
-  msg.textContent = input.value;
+  // Display agent name
+  const params = new URLSearchParams(window.location.search);
+  const agentName = params.get("agent");
+  const title = document.getElementById("chatTitle");
 
-  chatBox.appendChild(msg);
-  localStorage.setItem(storageKey, chatBox.innerHTML);
+  if (agentName && title) {
+    title.textContent = "Chat with " + agentName;
+  }
 
-  input.value = "";
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
+  // Load saved chat for this agent
+  const storageKey = agentName
+    ? "abrakaChat_" + agentName
+    : "abrakaChat_default";
 
-const chatBox = document.getElementById("chat-box");
-const input = document.getElementById("message-input");
-const sendBtn = document.getElementById("send-btn");
+  const savedChat = localStorage.getItem(storageKey);
+  if (savedChat) {
+    chatBox.innerHTML = savedChat;
+  }
 
-let messages = JSON.parse(localStorage.getItem("abrakaChat")) || [];
+  // Send message function (GLOBAL)
+  window.sendMessage = function () {
+    if (input.value.trim() === "") return;
 
-function renderMessages() {
-  chatBox.innerHTML = "";
-  messages.forEach(msg => {
-    const div = document.createElement("div");
-    div.className = msg.sender;
-    div.textContent = msg.text;
-    chatBox.appendChild(div);
-  });
-}
+    const msg = document.createElement("div");
+    msg.className = "message user";
+    msg.textContent = input.value;
 
-sendBtn.addEventListener("click", () => {
-  if (input.value.trim() === "") return;
+    chatBox.appendChild(msg);
+    localStorage.setItem(storageKey, chatBox.innerHTML);
 
-  messages.push({ sender: "user", text: input.value });
-  localStorage.setItem("abrakaChat", JSON.stringify(messages));
-  input.value = "";
-  renderMessages();
+    input.value = "";
+    chatBox.scrollTop = chatBox.scrollHeight;
+  };
+
 });
-
-renderMessages();
