@@ -30,3 +30,6 @@ function sendMessage() {
   input.value = "";
   chatBox.scrollTop = chatBox.scrollHeight;
     }
+
+document.getElementById("chatTitle").textContent =
+  "Chat about " + listingName;
