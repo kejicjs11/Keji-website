@@ -1,55 +1,42 @@
 const params = new URLSearchParams(window.location.search);
-const agentName = params.get("agent");
+const agentName = params.get("agent") || "Agent";
 
-if (agentName) {
-  const title = document.getElementById("chatTitle");
-  if (title) {
-    title.textContent = "Chat with " + agentName;
-  }
-}
-
-// ----- CHAT PAGE SAFE LOGIC -----
+document.getElementById("chat-title").textContent =
+  "Chat with " + agentName;
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const chatBox = document.getElementById("chatBox");
-  const input = document.getElementById("messageInput");
+  const chatBox = document.getElementById("chat-box");
+  const input = document.getElementById("message-input");
+  const sendBtn = document.getElementById("send-btn");
 
-  // If this page has no chat, stop here safely
-  if (!chatBox || !input) return;
-
-  // Display agent name
   const params = new URLSearchParams(window.location.search);
-  const agentName = params.get("agent");
-  const title = document.getElementById("chatTitle");
+  const agentName = params.get("agent") || "Agent";
 
-  if (agentName && title) {
-    title.textContent = "Chat with " + agentName;
+  document.getElementById("chat-title").textContent =
+    "Chat with " + agentName;
+
+  const storageKey = "chat_" + agentName;
+  let messages = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+  function renderMessages() {
+    chatBox.innerHTML = "";
+    messages.forEach(msg => {
+      const div = document.createElement("div");
+      div.className = "message " + msg.sender;
+      div.textContent = msg.text;
+      chatBox.appendChild(div);
+    });
   }
 
-  // Load saved chat for this agent
-  const storageKey = agentName
-    ? "abrakaChat_" + agentName
-    : "abrakaChat_default";
-
-  const savedChat = localStorage.getItem(storageKey);
-  if (savedChat) {
-    chatBox.innerHTML = savedChat;
-  }
-
-  // Send message function (GLOBAL)
-  window.sendMessage = function () {
+  sendBtn.addEventListener("click", () => {
     if (input.value.trim() === "") return;
 
-    const msg = document.createElement("div");
-    msg.className = "message user";
-    msg.textContent = input.value;
-
-    chatBox.appendChild(msg);
-    localStorage.setItem(storageKey, chatBox.innerHTML);
-
+    messages.push({ sender: "user", text: input.value });
+    localStorage.setItem(storageKey, JSON.stringify(messages));
     input.value = "";
-    chatBox.scrollTop = chatBox.scrollHeight;
-  };
+    renderMessages();
+  });
 
+  renderMessages();
 });
