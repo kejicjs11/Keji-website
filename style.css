@@ -227,11 +227,10 @@ body {
 /* Chat container */
 .chat-container {
   max-width: 600px;
-  margin: 20px auto;
-  padding: 10px;
+  margin: 0 auto;
+  padding: 15px;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 80px);
 }
 
 /* Chat title */
