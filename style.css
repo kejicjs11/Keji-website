@@ -335,3 +335,17 @@ body {
   transform: translateY(0);
   box-shadow: 0 4px 10px rgba(77, 163, 255, 0.2);
 }
+
+.filters select {
+  appearance: none;        /* removes default styling for cross-browser */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 8px 12px;
+  margin-right: 10px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background-color: #2a2f3a;  /* dark theme */
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
