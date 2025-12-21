@@ -34,17 +34,3 @@ function sendMessage() {
 document.getElementById("chatTitle").textContent =
   "Chat about " + listingName;
 
-document.getElementById("searchInput").addEventListener("input", () => {
-  const searchValue = document.getElementById("searchInput").value.toLowerCase();
-
-  document.querySelectorAll(".listing-card").forEach(card => {
-    const title = card.querySelector("h3").textContent.toLowerCase();
-    const agentName = card.querySelector(".whatsapp-btn").textContent.toLowerCase();
-
-    if (title.includes(searchValue) || agentName.includes(searchValue)) {
-      card.style.display = "block";
-    } else {
-      card.style.display = "none";
-    }
-  });
-});
