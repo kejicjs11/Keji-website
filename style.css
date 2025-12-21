@@ -228,10 +228,10 @@ body {
 .chat-container {
   max-width: 600px;
   margin: 0 auto;
-  padding: 15px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 140px);
+  height: calc(100vh - 60px);
 }
 
 /* Chat title */
