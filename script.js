@@ -34,3 +34,38 @@ function sendMessage() {
 document.getElementById("chatTitle").textContent =
   "Chat about " + listingName;
 
+const form = document.getElementById("marketForm");
+const listDiv = document.getElementById("marketList");
+
+let items = JSON.parse(localStorage.getItem("studentItems")) || [];
+
+function renderItems() {
+  listDiv.innerHTML = "";
+  items.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "item-card";
+    card.innerHTML = `
+      <h3>${item.name}</h3>
+      <p>${item.desc}</p>
+      <p>₦${item.price}</p>
+      <a href="https://wa.me/${item.contact}" target="_blank">Contact Seller</a>
+    `;
+    listDiv.appendChild(card);
+  });
+}
+
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  const newItem = {
+    name: document.getElementById("itemName").value,
+    desc: document.getElementById("itemDesc").value,
+    price: document.getElementById("itemPrice").value,
+    contact: document.getElementById("itemContact").value
+  };
+  items.push(newItem);
+  localStorage.setItem("studentItems", JSON.stringify(items));
+  renderItems();
+  form.reset();
+});
+
+renderItems();
