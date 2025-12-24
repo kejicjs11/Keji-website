@@ -69,3 +69,30 @@ form.addEventListener("submit", e => {
 });
 
 renderItems();
+
+// List of hostels with coordinates
+const hostels = [
+  { name: "Peace Hostel", lat: 5.7512, lng: 5.8912, type: "hostel" },
+  { name: "Royal Lodge", lat: 5.7525, lng: 5.8920, type: "self-contained" }
+];
+
+function initMap() {
+  const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 15,
+    center: { lat: 5.7512, lng: 5.8912 }
+  });
+
+  hostels.forEach(h => {
+    const marker = new google.maps.Marker({
+      position: { lat: h.lat, lng: h.lng },
+      map: map,
+      title: h.name
+    });
+
+    const info = new google.maps.InfoWindow({
+      content: `<h3>${h.name}</h3><p>Type: ${h.type}</p>`
+    });
+
+    marker.addListener("click", () => info.open(map, marker));
+  });
+}
