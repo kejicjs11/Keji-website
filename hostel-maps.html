@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hostel Map | AbrakaHomes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="navbar">
+    <h1><a href="index.html">AbrakaHomes</a></h1>
+    <nav>
+      <a href="listings.html">Listings</a>
+      <a href="marketplace.html">Marketplace</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Find Hostels on the Map</h2>
+    <div id="map" style="width:100%;height:500px;"></div>
+  </main>
+
+  <!-- Google Maps API script -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+  <script src="hostel-map.js"></script>
+</body>
+    </html>
