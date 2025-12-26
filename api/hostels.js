@@ -1,12 +1,15 @@
 const { connectDB } = require("../lib/db");
 
 module.exports = async function handler(req, res) {
+  console.log("Function invoked"); // Debugging
   try {
     const db = await connectDB();
+    console.log("DB connected"); // Debugging
     const collection = db.collection("hostels");
 
     if (req.method === "GET") {
       const hostels = await collection.find({}).toArray();
+      console.log("Hostels fetched:", hostels.length); // Debugging
       return res.status(200).json(hostels);
     }
 
@@ -33,7 +36,7 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ message: "Method not allowed" });
 
   } catch (err) {
-    console.error(err);
+    console.error("Error caught:", err); // Debugging
     return res.status(500).json({ message: "Server error" });
   }
 };
