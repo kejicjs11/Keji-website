@@ -1,55 +1,39 @@
-import { connectDB } from "../lib/db.js";
+const { connectDB } = require("../lib/db");
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   try {
     const db = await connectDB();
     const collection = db.collection("hostels");
 
-    // GET → fetch all hostels
     if (req.method === "GET") {
       const hostels = await collection.find({}).toArray();
       return res.status(200).json(hostels);
     }
 
-    // POST → add a new hostel
     if (req.method === "POST") {
-      const {
-        name,
-        location,
-        price,
-        agentId,
-        description,
-        images,
-      } = req.body;
+      const { name, location, price, description } = req.body;
 
       if (!name || !location || !price) {
-        return res.status(400).json({ message: "Missing required fields" });
+        return res.status(400).json({ message: "Missing fields" });
       }
 
-      const newHostel = {
+      const hostel = {
         name,
         location,
         price,
-        agentId: agentId || null,
         description: description || "",
-        images: images || [],
-        verified: false,
         createdAt: new Date(),
       };
 
-      await collection.insertOne(newHostel);
+      await collection.insertOne(hostel);
 
-      return res.status(201).json({
-        message: "Hostel added successfully",
-        hostel: newHostel,
-      });
+      return res.status(201).json(hostel);
     }
 
-    // Method not allowed
     return res.status(405).json({ message: "Method not allowed" });
 
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     return res.status(500).json({ message: "Server error" });
   }
-        }
+};
