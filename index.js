@@ -1,2 +1,1 @@
-// Dummy main file for Vercel detection
-console.log("AbrakaHomes project loaded");
+console.log("AbrakaHomes root loaded");
