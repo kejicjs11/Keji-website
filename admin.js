@@ -1,29 +1,45 @@
-async function submitHostel() {
-  const name = document.getElementById("name").value;
-  const location = document.getElementById("location").value;
-  const price = document.getElementById("price").value;
-  const msg = document.getElementById("msg");
+// Wait for the page to load
+document.addEventListener("DOMContentLoaded", () => {
 
-  msg.textContent = "Submitting...";
+  const form = document.getElementById("hostelForm");
+  const message = document.getElementById("message");
 
-  try {
-    const res = await fetch("/api/hostels", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ name, location, price })
-    });
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault(); // prevent default form submission
 
-    const data = await res.json();
+    const name = document.getElementById("name").value.trim();
+    const location = document.getElementById("location").value.trim();
+    const price = document.getElementById("price").value.trim();
 
-    if (!res.ok) {
-      msg.textContent = data.error || "Failed";
+    if (!name || !location || !price) {
+      message.innerText = "Please fill all fields";
       return;
     }
 
-    msg.textContent = "Hostel added successfully";
-  } catch (err) {
-    msg.textContent = "Network error";
-  }
+    try {
+      const res = await fetch("/api/hostels", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, location, price })
+      });
+
+      if (!res.ok) {
+        const error = await res.text();
+        message.innerText = `Error: ${error}`;
+        return;
+      }
+
+      const data = await res.json();
+      message.innerText = `Hostel added successfully! ID: ${data.id}`;
+
+      // Clear the form
+      form.reset();
+
+    } catch (err) {
+      console.error(err);
+      message.innerText = "Failed to add hostel. Check console for details.";
     }
+
+  });
+
+});
