@@ -1,12 +1,9 @@
 {
   "name": "abrakahomes",
   "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
   "type": "commonjs",
   "dependencies": {
-    "mongodb": "^5.10.0"
-  },
-  "scripts": {
-    "start": "node index.js"
+    "mongodb": "4.17.1"
   }
 }
