@@ -1,53 +1,36 @@
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
-}
-run().catch(console.dir);
-
-
 const { connectDB } = require("../lib/db");
 
-module.exports = async function handler(req, res) {
-  console.log("Function invoked");
+module.exports = async (req, res) => {
   try {
     const db = await connectDB();
-    console.log("DB connected");
-    const collection = db.collection("hostels");
+    const hostels = db.collection("hostels");
 
     if (req.method === "GET") {
-      const hostels = await collection.find({}).toArray();
-      console.log("Hostels fetched:", hostels.length);
-      return res.status(200).json(hostels);
+      const data = await hostels.find({}).toArray();
+      return res.status(200).json(data);
     }
 
     if (req.method === "POST") {
-      const { name, location, price, description } = req.body;
-      if (!name || !location || !price)
-        return res.status(400).json({ message: "Missing fields" });
+      const { name, location, price } = req.body;
 
-      const hostel = {
+      if (!name || !location || !price) {
+        return res.status(400).json({ error: "Missing fields" });
+      }
+
+      await hostels.insertOne({
         name,
         location,
         price,
-        description: description || "",
-        createdAt: new Date(),
-      };
+        createdAt: new Date()
+      });
 
-      await collection.insertOne(hostel);
-      return res.status(201).json(hostel);
+      return res.status(201).json({ success: true });
     }
 
-    return res.status(405).json({ message: "Method not allowed" });
+    return res.status(405).json({ error: "Method not allowed" });
+
   } catch (err) {
-    console.error("Error caught:", err);
-    return res.status(500).json({ message: "Server error" });
+    console.error(err);
+    return res.status(500).json({ error: err.message });
   }
 };
