@@ -22,7 +22,7 @@
   <main class="page-content">
     <h2>Available Listings</h2>
 
-    <!-- Filters -->
+    <!-- Filters (UI stays static) -->
     <div class="filters">
       <select id="typeFilter">
         <option value="">All Types</option>
@@ -44,26 +44,8 @@
       </select>
     </div>
 
-    <!-- Listings -->
-    <div class="listing-card" data-type="hostel" data-location="Abraka Market Road" data-price="180000">
-      <h3>Peace Hostel</h3>
-      <p><strong>Location:</strong> Abraka Market Road</p>
-      <p><strong>Price:</strong> ₦180,000 / year</p>
-      <p><strong>Type:</strong> Hostel</p>
-      <a href="chat.html?listing=Peace%20Hostel" class="chat-btn">Chat</a>
-      <a class="whatsapp-btn" href="https://wa.me/2349056485630" target="_blank">Chat Agent on WhatsApp</a>
-      <p><a href="agent-profile.html">View Agent Profile</a></p>
-    </div>
-
-    <div class="listing-card" data-type="self-contained" data-location="Ekrejeta Area" data-price="250000">
-      <h3>Royal Lodge</h3>
-      <p><strong>Location:</strong> Ekrejeta Area</p>
-      <p><strong>Price:</strong> ₦250,000 / year</p>
-      <p><strong>Type:</strong> Self-contained</p>
-      <a href="chat.html?listing=Royal%20Lodge" class="chat-btn">Chat</a>
-      <a class="whatsapp-btn" href="https://wa.me/2348105951966" target="_blank">Chat Agent on WhatsApp</a>
-      <p><a href="agent-profile.html">View Agent Profile</a></p>
-    </div>
+    <!-- Listings will be injected here dynamically -->
+    <div id="listings-container"></div>
 
   </main>
 
@@ -71,32 +53,7 @@
     <p>© 2025 AbrakaHomes</p>
   </footer>
 
-  <!-- Filter Script -->
-  <script>
-    function applyFilters() {
-      const typeValue = document.getElementById("typeFilter").value;
-      const locationValue = document.getElementById("locationFilter").value;
-      const priceValue = document.getElementById("priceFilter").value;
-
-      const [minPrice, maxPrice] = priceValue ? priceValue.split("-").map(Number) : [0, Infinity];
-
-      document.querySelectorAll(".listing-card").forEach(card => {
-        const cardType = card.getAttribute("data-type");
-        const cardLocation = card.getAttribute("data-location");
-        const cardPrice = Number(card.getAttribute("data-price"));
-
-        const typeMatch = !typeValue || cardType === typeValue;
-        const locationMatch = !locationValue || cardLocation === locationValue;
-        const priceMatch = !priceValue || (cardPrice >= minPrice && cardPrice <= maxPrice);
-
-        card.style.display = (typeMatch && locationMatch && priceMatch) ? "block" : "none";
-      });
-    }
-
-    document.getElementById("typeFilter").addEventListener("change", applyFilters);
-    document.getElementById("locationFilter").addEventListener("change", applyFilters);
-    document.getElementById("priceFilter").addEventListener("change", applyFilters);
-  </script>
+  <script src="listings.js"></script>
 
 </body>
-  </html>
+</html>
