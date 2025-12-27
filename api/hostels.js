@@ -3,7 +3,7 @@ const formidable = require("formidable");
 const fs = require("fs");
 const path = require("path");
 
-// Disable body parser for Vercel
+// Disable body parser for multipart/form-data
 const config = { api: { bodyParser: false } };
 
 const handler = async (req, res) => {
@@ -18,13 +18,12 @@ const handler = async (req, res) => {
 
     if (req.method === "POST") {
       const form = new formidable.IncomingForm({ multiples: true, keepExtensions: true });
-      form.maxFileSize = 3 * 1024 * 1024; // 3MB
+      form.maxFileSize = 3 * 1024 * 1024; // 3MB per file
 
       form.parse(req, async (err, fields, files) => {
         if (err) return res.status(400).json({ error: err.message });
 
         const { name, location, price, category, description } = fields;
-
         if (!name || !location || !price || !category || !description) {
           return res.status(400).json({ error: "Missing required fields" });
         }
@@ -39,6 +38,7 @@ const handler = async (req, res) => {
           if (file.size > 3 * 1024 * 1024)
             return res.status(400).json({ error: `Image ${i + 1} exceeds 3MB.` });
 
+          // Save temporarily in /tmp (Vercel writable)
           const tempPath = file.filepath || file.path;
           const fileName = Date.now() + "-" + file.originalFilename;
           const tmpPath = path.join("/tmp", fileName);
@@ -64,6 +64,7 @@ const handler = async (req, res) => {
     }
 
     return res.status(405).json({ error: "Method not allowed" });
+
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: err.message });
