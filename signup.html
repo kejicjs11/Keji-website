@@ -1,0 +1,40 @@
+<h2>Create Account</h2>
+
+<form id="signupForm">
+  <input type="text" id="name" placeholder="Full Name" required />
+  <input type="email" id="email" placeholder="Email" required />
+  <input type="password" id="password" placeholder="Password" required />
+
+  <label>
+    Account type
+    <select id="role" required>
+      <option value="user">User (Looking for property)</option>
+      <option value="agent">Agent (Listing properties)</option>
+    </select>
+  </label>
+
+  <button type="submit">Sign Up</button>
+</form>
+
+<p id="msg"></p>
+
+<script>
+document.getElementById("signupForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const msg = document.getElementById("msg");
+
+  const res = await fetch("/api/auth/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: name.value.trim(),
+      email: email.value.trim(),
+      password: password.value,
+      role: role.value
+    })
+  });
+
+  const data = await res.json();
+  msg.innerText = data.message || data.error;
+});
+                                                       </script>                                                       </script>
