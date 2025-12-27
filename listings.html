@@ -5,6 +5,7 @@
 <title>Listings | AbrakaHomes</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
+
 <style>
   body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; }
   .navbar { background: #007bff; color: #fff; padding: 10px 20px; display: flex; justify-content: space-between; flex-wrap: wrap; }
@@ -20,15 +21,16 @@
   .hostel-title { font-weight: bold; font-size: 18px; }
   .hostel-category, .hostel-price, .hostel-status { font-size: 14px; color: #555; }
   .hostel-description { font-size: 14px; color: #333; margin-top: 5px; }
-  button { margin-top: 5px; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+  button { margin-top: 5px; border: none; padding: 7px 10px; border-radius: 5px; cursor: pointer; }
   .delete-btn { background-color: #ff4d4f; color: #fff; }
-  .taken-btn { background-color: #aaa; color: #fff; }
+  .taken-btn { background-color: #6c757d; color: #fff; }
   .chat-btn { background-color: #28a745; color: #fff; }
   .agent-btn { background-color: #007bff; color: #fff; }
   .whatsapp-btn { background-color: #25D366; color: #fff; }
   footer { text-align: center; padding: 15px; background: #007bff; color: #fff; margin-top: 40px; }
 </style>
 </head>
+
 <body>
 
 <header class="navbar">
@@ -48,17 +50,19 @@
   <div class="filters">
     <select id="typeFilter">
       <option value="">All Types</option>
-      <option value="One-room">One-room</option>
-      <option value="Self-contained">Self-contained</option>
-      <option value="Duplex">Duplex</option>
-      <option value="Mini-flat">Mini-flat</option>
-      <option value="Others">Others</option>
+      <option>One-room</option>
+      <option>Self-contained</option>
+      <option>Duplex</option>
+      <option>Mini-flat</option>
+      <option>Others</option>
     </select>
+
     <select id="locationFilter">
       <option value="">All Locations</option>
-      <option value="Abraka Market Road">Abraka Market Road</option>
-      <option value="Ekrejeta Area">Ekrejeta Area</option>
+      <option>Abraka Market Road</option>
+      <option>Ekrejeta Area</option>
     </select>
+
     <select id="priceFilter">
       <option value="">All Prices</option>
       <option value="0-150000">₦0 - ₦150,000</option>
@@ -67,7 +71,7 @@
     </select>
   </div>
 
-  <div id="listings-container"></div>
+  <div id="listings-container" class="listings-container"></div>
   <div id="message"></div>
 </main>
 
@@ -76,41 +80,35 @@
 </footer>
 
 <script>
-// === CONFIG ===
-const API_URL = "https://abrakahomes.vercel.app/api/hostels"; // replace with your deployed URL
 let currentUser = null;
 
-// === FETCH CURRENT USER ===
-async function fetchCurrentUser() {
-  try {
-    const res = await fetch("/api/me"); // backend returns { id, role }
-    if (!res.ok) return null;
-    return await res.json();
-  } catch (err) {
-    console.error("Error fetching user:", err);
-    return null;
-  }
+/* ===== AUTH ===== */
+async function loadCurrentUser() {
+  const token = localStorage.getItem("authToken");
+  if (!token) return null;
+
+  const res = await fetch("/api/me", {
+    headers: { Authorization: token }
+  });
+
+  if (!res.ok) return null;
+  return res.json();
 }
 
-// === FETCH HOSTELS ===
+/* ===== FETCH HOSTELS ===== */
 async function fetchHostels() {
-  try {
-    const res = await fetch(API_URL);
-    if (!res.ok) throw new Error("Failed to fetch hostels");
-    return await res.json();
-  } catch (err) {
-    console.error(err);
-    return [];
-  }
+  const res = await fetch("/api/hostels");
+  if (!res.ok) return [];
+  return res.json();
 }
 
-// === FILTER LOGIC ===
-function applyFilters(hostels) {
-  const type = document.getElementById("typeFilter").value;
-  const location = document.getElementById("locationFilter").value;
-  const price = document.getElementById("priceFilter").value;
+/* ===== FILTER ===== */
+function applyFilters(list) {
+  const type = typeFilter.value;
+  const location = locationFilter.value;
+  const price = priceFilter.value;
 
-  return hostels.filter(h => {
+  return list.filter(h => {
     if (type && h.category !== type) return false;
     if (location && h.location !== location) return false;
     if (price) {
@@ -121,112 +119,92 @@ function applyFilters(hostels) {
   });
 }
 
-// === RENDER HOSTELS ===
-async function renderHostels() {
+/* ===== RENDER ===== */
+async function renderListings() {
   const container = document.getElementById("listings-container");
-  const message = document.getElementById("message");
-  container.innerHTML = "";
-  message.innerText = "Loading hostels...";
+  container.innerHTML = "Loading...";
 
   let hostels = await fetchHostels();
   hostels = applyFilters(hostels);
 
-  if (!hostels.length) { message.innerText = "No hostels found."; return; }
-  message.innerText = "";
+  if (!hostels.length) {
+    container.innerHTML = "No listings found.";
+    return;
+  }
 
-  hostels.forEach(hostel => {
+  container.innerHTML = "";
+
+  hostels.forEach(h => {
     const card = document.createElement("div");
     card.className = "hostel-card";
 
-    const img = document.createElement("img");
-    img.src = hostel.images?.[0] || "placeholder.jpg";
-    card.appendChild(img);
-
-    const content = document.createElement("div");
-    content.className = "hostel-content";
-    content.innerHTML = `
-      <div class="hostel-title">${hostel.name}</div>
-      <div class="hostel-category">Category: ${hostel.category}</div>
-      <div class="hostel-price">Price: ₦${hostel.price}</div>
-      <div class="hostel-status">Status: ${hostel.status || 'available'}</div>
-      <div class="hostel-description">${hostel.description}</div>
+    card.innerHTML = `
+      <img src="${h.images?.[0] || 'placeholder.jpg'}">
+      <div class="hostel-content">
+        <div class="hostel-title">${h.name}</div>
+        <div class="hostel-category">Category: ${h.category}</div>
+        <div class="hostel-price">Price: ₦${h.price}</div>
+        <div class="hostel-status">Status: ${h.taken ? "Taken" : "Available"}</div>
+        <div class="hostel-description">${h.description}</div>
+      </div>
     `;
 
-    // Admin delete button
+    const content = card.querySelector(".hostel-content");
+
     if (currentUser?.role === "admin") {
-      const deleteBtn = document.createElement("button");
-      deleteBtn.className = "delete-btn";
-      deleteBtn.innerText = "Delete";
-      deleteBtn.addEventListener("click", async () => {
-        if (!confirm("Are you sure?")) return;
-        try {
-          await fetch(API_URL, { 
-            method: "DELETE", 
-            headers: { "Content-Type": "application/json" }, 
-            body: JSON.stringify({ id: hostel._id }) 
-          });
-          card.remove();
-          alert("Hostel deleted");
-        } catch (err) { console.error(err); alert("Error deleting hostel"); }
-      });
-      content.appendChild(deleteBtn);
+      const del = document.createElement("button");
+      del.className = "delete-btn";
+      del.textContent = "Delete";
+      del.onclick = async () => {
+        if (!confirm("Delete this listing?")) return;
+        await fetch(`/api/hostels?id=${h._id}`, {
+          method: "DELETE",
+          headers: { Authorization: localStorage.getItem("authToken") }
+        });
+        renderListings();
+      };
+      content.appendChild(del);
     }
 
-    // Owner mark taken
-    if (hostel.ownerId === currentUser?.id && hostel.status !== "taken") {
-      const markTakenBtn = document.createElement("button");
-      markTakenBtn.className = "taken-btn";
-      markTakenBtn.innerText = "Mark Taken";
-      markTakenBtn.addEventListener("click", async () => {
-        try {
-          await fetch(API_URL, { 
-            method: "PATCH", 
-            headers: { "Content-Type": "application/json" }, 
-            body: JSON.stringify({ id: hostel._id, action: "markTaken" }) 
-          });
-          markTakenBtn.innerText = "Taken";
-          markTakenBtn.disabled = true;
-          content.querySelector(".hostel-status").innerText = "Status: taken";
-        } catch (err) { console.error(err); }
-      });
-      content.appendChild(markTakenBtn);
+    if (currentUser?.id === h.ownerId && !h.taken) {
+      const taken = document.createElement("button");
+      taken.className = "taken-btn";
+      taken.textContent = "Mark Taken";
+      taken.onclick = async () => {
+        await fetch("/api/hostels/taken", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("authToken")
+          },
+          body: JSON.stringify({ id: h._id })
+        });
+        renderListings();
+      };
+      content.appendChild(taken);
     }
 
-    // Chat
-    const chatBtn = document.createElement("button");
-    chatBtn.className = "chat-btn";
-    chatBtn.innerText = "Chat";
-    chatBtn.addEventListener("click", () => alert("Open chat (to be implemented)"));
-    content.appendChild(chatBtn);
+    content.innerHTML += `
+      <button class="chat-btn">Chat</button>
+      <button class="agent-btn">View Agent</button>
+      <button class="whatsapp-btn"
+        onclick="window.open('https://wa.me/?text=Only%20for%20emergencies')">
+        WhatsApp
+      </button>
+    `;
 
-    // View Agent
-    const viewAgentBtn = document.createElement("button");
-    viewAgentBtn.className = "agent-btn";
-    viewAgentBtn.innerText = "View Agent";
-    viewAgentBtn.addEventListener("click", () => window.location.href = `/agents/${hostel.agentId}`);
-    content.appendChild(viewAgentBtn);
-
-    // WhatsApp
-    const whatsappBtn = document.createElement("button");
-    whatsappBtn.className = "whatsapp-btn";
-    whatsappBtn.innerText = "WhatsApp";
-    whatsappBtn.addEventListener("click", () => {
-      window.open(`https://wa.me/<agent-number>?text=Only%20for%20emergencies`, "_blank");
-    });
-    content.appendChild(whatsappBtn);
-
-    card.appendChild(content);
     container.appendChild(card);
   });
 }
 
-// === INIT ===
+/* ===== INIT ===== */
 window.addEventListener("DOMContentLoaded", async () => {
-  currentUser = await fetchCurrentUser(); // get actual user
-  renderHostels();
-  document.getElementById("typeFilter").addEventListener("change", renderHostels);
-  document.getElementById("locationFilter").addEventListener("change", renderHostels);
-  document.getElementById("priceFilter").addEventListener("change", renderHostels);
+  currentUser = await loadCurrentUser();
+  renderListings();
+
+  typeFilter.onchange = renderListings;
+  locationFilter.onchange = renderListings;
+  priceFilter.onchange = renderListings;
 });
 </script>
 
