@@ -1,14 +1,13 @@
-const { connectDB } = require("../lib/db");
-const formidable = require("formidable");
-const fs = require("fs");
-const path = require("path");
+import { connectDB } from "../lib/db";
+import formidable from "formidable";
+import fs from "fs";
+import path from "path";
 
-// Disable default body parser for Vercel
 export const config = {
   api: { bodyParser: false }
 };
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   try {
     const db = await connectDB();
     const hostels = db.collection("hostels");
@@ -28,36 +27,41 @@ module.exports = async (req, res) => {
         }
 
         const { name, location, price, category, description } = fields;
-        const { image1, image2, image3 } = files;
 
-        if (!name || !location || !price || !category || !description || !image1 || !image2 || !image3) {
-          return res.status(400).json({ error: "All fields and 3 images are required" });
+        if (!name || !location || !price || !category || !description) {
+          return res.status(400).json({ error: "Missing required fields" });
         }
 
-        // Save images to /public/uploads (Vercel allows /tmp for temporary storage)
-        const uploadImage = (file) => {
+        // Prepare images array safely
+        const imageFiles = [files.image1, files.image2, files.image3].filter(Boolean);
+        const images = [];
+
+        for (let i = 0; i < imageFiles.length; i++) {
+          const file = Array.isArray(imageFiles[i]) ? imageFiles[i][0] : imageFiles[i];
+          if (!file) continue;
+
+          // Ensure file <= 3MB
+          if (file.size > 3 * 1024 * 1024) {
+            return res.status(400).json({ error: `Image ${i + 1} exceeds 3MB limit.` });
+          }
+
+          // Save temporarily in /tmp (Vercel writable)
           const tempPath = file.filepath || file.path;
           const fileName = Date.now() + "-" + file.originalFilename;
-          const uploadDir = path.join(process.cwd(), "public", "uploads");
-          if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
-          const newPath = path.join(uploadDir, fileName);
-          fs.copyFileSync(tempPath, newPath);
-          return "/uploads/" + fileName;
-        };
+          const tmpPath = path.join("/tmp", fileName);
+          fs.copyFileSync(tempPath, tmpPath);
 
-        const images = [
-          uploadImage(image1),
-          uploadImage(image2),
-          uploadImage(image3)
-        ];
+          // For now, store relative path
+          images.push(`/tmp/${fileName}`);
+        }
 
-        // Insert hostel into DB
+        // Insert into DB
         const result = await hostels.insertOne({
           name,
           location,
           price,
           category,
-          images,       // array of image URLs
+          images, // can be empty array if no images
           description,
           createdAt: new Date()
         });
@@ -65,7 +69,7 @@ module.exports = async (req, res) => {
         return res.status(201).json({ id: result.insertedId });
       });
 
-      return; // exit POST
+      return;
     }
 
     return res.status(405).json({ error: "Method not allowed" });
@@ -74,4 +78,4 @@ module.exports = async (req, res) => {
     console.error(err);
     return res.status(500).json({ error: err.message });
   }
-};
+      }
