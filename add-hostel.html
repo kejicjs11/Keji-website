@@ -3,35 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel - Add Hostel</title>
+<title>Add Hostel</title>
 <style>
   body {
     font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #f7f7f7;
+    background: #f2f2f2;
+    margin: 0;
+    padding: 20px;
   }
   h1 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
   }
   form {
     max-width: 500px;
     margin: 0 auto;
     background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 20px 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  .form-group {
+    margin-bottom: 15px;
   }
   label {
     display: block;
-    margin-top: 15px;
     font-weight: bold;
+    margin-bottom: 6px;
   }
   input, select, textarea, button {
     width: 100%;
     padding: 10px;
-    margin-top: 5px;
-    border-radius: 5px;
+    font-size: 15px;
+    border-radius: 6px;
     border: 1px solid #ccc;
     box-sizing: border-box;
   }
@@ -39,12 +43,12 @@
     resize: vertical;
   }
   button {
-    margin-top: 20px;
     background-color: #007bff;
     color: white;
-    font-weight: bold;
     border: none;
+    margin-top: 15px;
     cursor: pointer;
+    font-weight: bold;
   }
   button:hover {
     background-color: #0056b3;
@@ -61,29 +65,52 @@
 <h1>Add Hostel</h1>
 
 <form id="hostelForm">
-  <label>Hostel Name:</label>
-  <input type="text" id="name" required>
 
-  <label>Location:</label>
-  <input type="text" id="location" required>
+  <div class="form-group">
+    <label>Hostel Name:</label>
+    <input type="text" id="name" required>
+  </div>
 
-  <label>Price:</label>
-  <input type="number" id="price" required>
+  <div class="form-group">
+    <label>Location:</label>
+    <input type="text" id="location" required>
+  </div>
 
-  <label>Category:</label>
-  <select id="category" required>
-    <option value="One-room">One-room</option>
-    <option value="Self-contained">Self-contained</option>
-    <option value="Duplex">Duplex</option>
-    <option value="Mini-flat">Mini-flat</option>
-    <option value="Others">Others</option>
-  </select>
+  <div class="form-group">
+    <label>Price:</label>
+    <input type="number" id="price" required>
+  </div>
 
-  <label>Upload Images (3 max, ≤3MB each):</label>
-  <input type="file" id="images" accept="image/*" multiple required>
+  <div class="form-group">
+    <label>Category:</label>
+    <select id="category" required>
+      <option value="One-room">One-room</option>
+      <option value="Self-contained">Self-contained</option>
+      <option value="Duplex">Duplex</option>
+      <option value="Mini-flat">Mini-flat</option>
+      <option value="Others">Others</option>
+    </select>
+  </div>
 
-  <label>Description:</label>
-  <textarea id="description" rows="4" required></textarea>
+  <div class="form-group">
+    <label>Image 1 (≤3MB):</label>
+    <input type="file" id="image1" accept="image/*" required>
+  </div>
+
+  <div class="form-group">
+    <label>Image 2 (≤3MB):</label>
+    <input type="file" id="image2" accept="image/*" required>
+  </div>
+
+  <div class="form-group">
+    <label>Image 3 (≤3MB):</label>
+    <input type="file" id="image3" accept="image/*" required>
+  </div>
+
+  <div class="form-group">
+    <label>Description:</label>
+    <textarea id="description" rows="4" required></textarea>
+  </div>
 
   <button type="submit">Add Hostel</button>
 </form>
@@ -91,8 +118,8 @@
 <div id="message"></div>
 
 <script>
-const cloudName = "dtgybmsbi"; // your Cloudinary cloud name
-const unsignedPreset = "abrakahomes_unsigned"; // your unsigned preset
+const cloudName = "dtgybmsbi"; 
+const unsignedPreset = "abrakahomes_unsigned";
 
 document.getElementById("hostelForm").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -105,15 +132,19 @@ document.getElementById("hostelForm").addEventListener("submit", async (e) => {
   const price = document.getElementById("price").value.trim();
   const category = document.getElementById("category").value;
   const description = document.getElementById("description").value.trim();
-  const files = document.getElementById("images").files;
 
-  if (!name || !location || !price || !category || !description || files.length !== 3) {
+  const image1 = document.getElementById("image1").files[0];
+  const image2 = document.getElementById("image2").files[0];
+  const image3 = document.getElementById("image3").files[0];
+  const files = [image1, image2, image3];
+
+  if (!name || !location || !price || !category || !description || files.some(f => !f)) {
     message.style.color = "red";
-    message.innerText = "Please fill all fields and select exactly 3 images.";
+    message.innerText = "Please fill all fields and select all images.";
     return;
   }
 
-  const maxSize = 3 * 1024 * 1024; // 3MB
+  const maxSize = 3 * 1024 * 1024;
   for (let i = 0; i < files.length; i++) {
     if (files[i].size > maxSize) {
       message.style.color = "red";
