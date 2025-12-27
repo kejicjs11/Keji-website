@@ -1,206 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Listings | AbrakaHomes</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; }
-    .navbar { background: #007bff; color: #fff; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-    .navbar h1 a { color: #fff; text-decoration: none; }
-    .navbar nav a { color: #fff; margin-left: 15px; text-decoration: none; font-weight: bold; }
-    .page-content { padding: 20px; max-width: 1200px; margin: auto; }
-    .filters { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-    .filters select { padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
-    .listings-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
-    .hostel-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 300px; overflow: hidden; display: flex; flex-direction: column; }
-    .hostel-card img { width: 100%; height: 200px; object-fit: cover; }
-    .hostel-content { padding: 15px; display: flex; flex-direction: column; gap: 5px; }
-    .hostel-title { font-weight: bold; font-size: 18px; }
-    .hostel-category, .hostel-price { font-size: 14px; color: #555; }
-    .hostel-description { font-size: 14px; color: #333; margin-top: 5px; }
-    footer { text-align: center; padding: 15px; background: #007bff; color: #fff; margin-top: 40px; }
-  </style>
+<meta charset="UTF-8">
+<title>Listings | AbrakaHomes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+<style>
+  body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; }
+  .navbar { background: #007bff; color: #fff; padding: 10px 20px; display: flex; justify-content: space-between; flex-wrap: wrap; }
+  .navbar h1 a { color: #fff; text-decoration: none; }
+  .navbar nav a { color: #fff; margin-left: 15px; text-decoration: none; font-weight: bold; }
+  .page-content { padding: 20px; max-width: 1200px; margin: auto; }
+  .filters { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+  .filters select { padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
+  .listings-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+  .hostel-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 300px; overflow: hidden; display: flex; flex-direction: column; }
+  .hostel-card img { width: 100%; height: 200px; object-fit: cover; }
+  .hostel-content { padding: 15px; display: flex; flex-direction: column; gap: 5px; }
+  .hostel-title { font-weight: bold; font-size: 18px; }
+  .hostel-category, .hostel-price, .hostel-status { font-size: 14px; color: #555; }
+  .hostel-description { font-size: 14px; color: #333; margin-top: 5px; }
+  button { margin-top: 5px; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+  .delete-btn { background-color: #ff4d4f; color: #fff; }
+  .taken-btn { background-color: #aaa; color: #fff; }
+  .chat-btn { background-color: #28a745; color: #fff; }
+  .agent-btn { background-color: #007bff; color: #fff; }
+  .whatsapp-btn { background-color: #25D366; color: #fff; }
+  footer { text-align: center; padding: 15px; background: #007bff; color: #fff; margin-top: 40px; }
+</style>
 </head>
 <body>
 
-  <header class="navbar">
-    <h1><a href="index.html">AbrakaHomes</a></h1>
-    <nav>
-      <a href="hostel-map.html">Hostel Map</a>
-      <a href="marketplace.html">Marketplace</a>
-      <a href="listings.html">Listings</a>
-      <a href="agents.html">Agents</a>
-      <a href="login.html">Login</a>
-    </nav>
-  </header>
+<header class="navbar">
+  <h1><a href="index.html">AbrakaHomes</a></h1>
+  <nav>
+    <a href="hostel-map.html">Hostel Map</a>
+    <a href="marketplace.html">Marketplace</a>
+    <a href="listings.html">Listings</a>
+    <a href="agents.html">Agents</a>
+    <a href="login.html">Login</a>
+  </nav>
+</header>
 
-  <main class="page-content">
-    <h2>Available Listings</h2>
+<main class="page-content">
+  <h2>Available Listings</h2>
 
-    <div class="filters">
-      <select id="typeFilter">
-        <option value="">All Types</option>
-        <option value="One-room">One-room</option>
-        <option value="Self-contained">Self-contained</option>
-        <option value="Duplex">Duplex</option>
-        <option value="Mini-flat">Mini-flat</option>
-        <option value="Others">Others</option>
-      </select>
+  <div class="filters">
+    <select id="typeFilter">
+      <option value="">All Types</option>
+      <option value="One-room">One-room</option>
+      <option value="Self-contained">Self-contained</option>
+      <option value="Duplex">Duplex</option>
+      <option value="Mini-flat">Mini-flat</option>
+      <option value="Others">Others</option>
+    </select>
+    <select id="locationFilter">
+      <option value="">All Locations</option>
+      <option value="Abraka Market Road">Abraka Market Road</option>
+      <option value="Ekrejeta Area">Ekrejeta Area</option>
+    </select>
+    <select id="priceFilter">
+      <option value="">All Prices</option>
+      <option value="0-150000">₦0 - ₦150,000</option>
+      <option value="150001-250000">₦150,001 - ₦250,000</option>
+      <option value="250001-500000">₦250,001 - ₦500,000</option>
+    </select>
+  </div>
 
-      <select id="locationFilter">
-        <option value="">All Locations</option>
-        <option value="Abraka Market Road">Abraka Market Road</option>
-        <option value="Ekrejeta Area">Ekrejeta Area</option>
-      </select>
+  <div id="listings-container"></div>
+  <div id="message"></div>
+</main>
 
-      <select id="priceFilter">
-        <option value="">All Prices</option>
-        <option value="0-150000">₦0 - ₦150,000</option>
-        <option value="150001-250000">₦150,001 - ₦250,000</option>
-        <option value="250001-500000">₦250,001 - ₦500,000</option>
-      </select>
-    </div>
+<footer>
+  <p>© 2025 AbrakaHomes</p>
+</footer>
 
-    <div id="listings-container"></div>
-    <div id="message"></div>
-  </main>
+<script>
+const currentUser = { id: "user123", role: "admin" }; // Replace with real auth
 
-  <footer>
-    <p>© 2025 AbrakaHomes</p>
-  </footer>
+async function fetchHostels() {
+  try {
+    const res = await fetch("/api/hostels");
+    if (!res.ok) throw new Error("Failed to fetch hostels");
+    return await res.json();
+  } catch (err) { console.error(err); return []; }
+}
 
-  <script>
-    async function loadHostels() {
-      const container = document.getElementById("listings-container");
-      const message = document.getElementById("message");
-      message.innerText = "Loading hostels...";
-
-      try {
-        const res = await fetch("/api/hostels");
-        if (!res.ok) throw new Error("Failed to fetch hostels");
-
-        let hostels = await res.json();
-        container.innerHTML = "";
-
-        if (hostels.length === 0) {
-          message.innerText = "No hostels available at the moment.";
-          return;
-        }
-
-        hostels.forEach(hostel => {
-          const card = document.createElement("div");
-          card.className = "hostel-card";
-
-          const img = document.createElement("img");
-          img.src = hostel.images && hostel.images.length > 0 ? hostel.images[0] : "placeholder.jpg";
-          card.appendChild(img);
-
-          const content = document.createElement("div");
-          content.className = "hostel-content";
-
-          const title = document.createElement("div");
-          title.className = "hostel-title";
-          title.innerText = hostel.name;
-          content.appendChild(title);
-
-          const category = document.createElement("div");
-          category.className = "hostel-category";
-          category.innerText = "Category: " + hostel.category;
-          content.appendChild(category);
-
-          const price = document.createElement("div");
-          price.className = "hostel-price";
-          price.innerText = "Price: ₦" + hostel.price;
-          content.appendChild(price);
-
-          const desc = document.createElement("div");
-          desc.className = "hostel-description";
-          desc.innerText = hostel.description;
-          content.appendChild(desc);
-
-          card.appendChild(content);
-          container.appendChild(card);
-        });
-
-        message.innerText = "";
-      } catch (err) {
-        console.error(err);
-        message.style.color = "red";
-        message.innerText = "Error loading hostels. Check console for details.";
-      }
+function applyFilters(hostels) {
+  const type = document.getElementById("typeFilter").value;
+  const location = document.getElementById("locationFilter").value;
+  const price = document.getElementById("priceFilter").value;
+  return hostels.filter(h => {
+    if (type && h.category !== type) return false;
+    if (location && h.location !== location) return false;
+    if (price) {
+      const [min, max] = price.split("-").map(Number);
+      if (h.price < min || h.price > max) return false;
     }
+    return true;
+  });
+}
 
-    // Filters
-    function applyFilters(hostels) {
-      const type = document.getElementById("typeFilter").value;
-      const location = document.getElementById("locationFilter").value;
-      const price = document.getElementById("priceFilter").value;
+async function renderHostels() {
+  const container = document.getElementById("listings-container");
+  const message = document.getElementById("message");
+  container.innerHTML = "";
+  message.innerText = "Loading hostels...";
 
-      return hostels.filter(h => {
-        let pass = true;
-        if (type && h.category !== type) pass = false;
-        if (location && h.location !== location) pass = false;
-        if (price) {
-          const [min, max] = price.split("-").map(Number);
-          if (h.price < min || h.price > max) pass = false;
-        }
-        return pass;
+  let hostels = await fetchHostels();
+  hostels = applyFilters(hostels);
+
+  if (!hostels.length) { message.innerText = "No hostels found."; return; }
+  message.innerText = "";
+
+  hostels.forEach(hostel => {
+    const card = document.createElement("div");
+    card.className = "hostel-card";
+
+    const img = document.createElement("img");
+    img.src = hostel.images && hostel.images.length > 0 ? hostel.images[0] : "placeholder.jpg";
+    card.appendChild(img);
+
+    const content = document.createElement("div");
+    content.className = "hostel-content";
+
+    content.innerHTML = `
+      <div class="hostel-title">${hostel.name}</div>
+      <div class="hostel-category">Category: ${hostel.category}</div>
+      <div class="hostel-price">Price: ₦${hostel.price}</div>
+      <div class="hostel-status">Status: ${hostel.status || 'available'}</div>
+      <div class="hostel-description">${hostel.description}</div>
+    `;
+
+    // Buttons
+    if (currentUser.role === "admin") {
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "delete-btn";
+      deleteBtn.innerText = "Delete";
+      deleteBtn.addEventListener("click", async () => {
+        if (!confirm("Are you sure?")) return;
+        try {
+          await fetch("/api/hostels", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: hostel._id }) });
+          card.remove();
+          alert("Hostel deleted");
+        } catch (err) { console.error(err); alert("Error deleting hostel"); }
       });
+      content.appendChild(deleteBtn);
     }
 
-    async function loadAndFilterHostels() {
-      const res = await fetch("/api/hostels");
-      if (!res.ok) return;
-      let hostels = await res.json();
-      hostels = applyFilters(hostels);
-
-      const container = document.getElementById("listings-container");
-      container.innerHTML = "";
-      hostels.forEach(hostel => {
-        const card = document.createElement("div");
-        card.className = "hostel-card";
-
-        const img = document.createElement("img");
-        img.src = hostel.images && hostel.images.length > 0 ? hostel.images[0] : "placeholder.jpg";
-        card.appendChild(img);
-
-        const content = document.createElement("div");
-        content.className = "hostel-content";
-
-        const title = document.createElement("div");
-        title.className = "hostel-title";
-        title.innerText = hostel.name;
-        content.appendChild(title);
-
-        const category = document.createElement("div");
-        category.className = "hostel-category";
-        category.innerText = "Category: " + hostel.category;
-        content.appendChild(category);
-
-        const price = document.createElement("div");
-        price.className = "hostel-price";
-        price.innerText = "Price: ₦" + hostel.price;
-        content.appendChild(price);
-
-        const desc = document.createElement("div");
-        desc.className = "hostel-description";
-        desc.innerText = hostel.description;
-        content.appendChild(desc);
-
-        card.appendChild(content);
-        container.appendChild(card);
+    if (hostel.ownerId === currentUser.id && hostel.status !== "taken") {
+      const markTakenBtn = document.createElement("button");
+      markTakenBtn.className = "taken-btn";
+      markTakenBtn.innerText = "Mark Taken";
+      markTakenBtn.addEventListener("click", async () => {
+        try {
+          await fetch("/api/hostels", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: hostel._id, action: "markTaken" }) });
+          markTakenBtn.innerText = "Taken";
+          markTakenBtn.disabled = true;
+          content.querySelector(".hostel-status").innerText = "Status: taken";
+        } catch (err) { console.error(err); }
       });
+      content.appendChild(markTakenBtn);
     }
 
-    window.addEventListener("DOMContentLoaded", () => {
-      loadHostels();
+    // Chat button
+    const chatBtn = document.createElement("button");
+    chatBtn.className = "chat-btn";
+    chatBtn.innerText = "Chat";
+    chatBtn.addEventListener("click", () => alert("Open chat (to be implemented)"));
+    content.appendChild(chatBtn);
 
-      document.getElementById("typeFilter").addEventListener("change", loadAndFilterHostels);
-      document.getElementById("locationFilter").addEventListener("change", loadAndFilterHostels);
-      document.getElementById("priceFilter").addEventListener("change", loadAndFilterHostels);
+    // View Agent button
+    const viewAgentprofileBtn = document.createElement("button");
+    viewAgentprofileBtn.className = "agent-btn";
+    viewAgentprofileBtn.innerText = "View Agent";
+    viewAgentprofileBtn.addEventListener("click", () => window.location.href = `/agents/${hostel.agentId}`);
+    content.appendChild(viewAgentBtn);
+
+    // WhatsApp button
+    const whatsappBtn = document.createElement("button");
+    whatsappBtn.className = "whatsapp-btn";
+    whatsappBtn.innerText = "WhatsApp";
+    whatsappBtn.addEventListener("click", () => {
+      window.open(`https://wa.me/<agent-number>?text=Only%20for%20emergencies`, "_blank");
     });
-  </script>
+    content.appendChild(whatsappBtn);
+
+    card.appendChild(content);
+    container.appendChild(card);
+  });
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  renderHostels();
+  document.getElementById("typeFilter").addEventListener("change", renderHostels);
+  document.getElementById("locationFilter").addEventListener("change", renderHostels);
+  document.getElementById("priceFilter").addEventListener("change", renderHostels);
+});
+</script>
 </body>
-                           </html>
+  </html>
