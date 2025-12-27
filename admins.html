@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Admin Account</title>
+  <style>
+    body { font-family: Arial; background: #1e1e1e; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    button { padding: 10px 20px; font-size: 16px; border: none; border-radius: 6px; cursor: pointer; background: #007bff; color: #fff; }
+    #message { margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<div>
+  <button id="createAdminBtn">Create Admin Account</button>
+  <div id="message"></div>
+</div>
+
+<script>
+  const button = document.getElementById('createAdminBtn');
+  const message = document.getElementById('message');
+
+  button.addEventListener('click', async () => {
+    message.innerText = 'Sending request...';
+
+    try {
+      const res = await fetch('https://<your-vercel-domain>/api/createAdmin', {
+        method: 'POST'
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Failed to create admin');
+
+      message.style.color = 'green';
+      message.innerText = `Success! Admin ID: ${data.id}`;
+    } catch (err) {
+      console.error(err);
+      message.style.color = 'red';
+      message.innerText = `Error: ${err.message}`;
+    }
+  });
+</script>
+
+</body>
+</html>
