@@ -7,27 +7,130 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
-  body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; }
-  .navbar { background: #007bff; color: #fff; padding: 10px 20px; display: flex; justify-content: space-between; flex-wrap: wrap; }
-  .navbar h1 a { color: #fff; text-decoration: none; }
-  .navbar nav a { color: #fff; margin-left: 15px; text-decoration: none; font-weight: bold; }
-  .page-content { padding: 20px; max-width: 1200px; margin: auto; }
-  .filters { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-  .filters select { padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
-  .listings-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
-  .hostel-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 300px; overflow: hidden; display: flex; flex-direction: column; }
-  .hostel-card img { width: 100%; height: 200px; object-fit: cover; }
-  .hostel-content { padding: 15px; display: flex; flex-direction: column; gap: 5px; }
-  .hostel-title { font-weight: bold; font-size: 18px; }
-  .hostel-category, .hostel-price, .hostel-status { font-size: 14px; color: #555; }
-  .hostel-description { font-size: 14px; color: #333; margin-top: 5px; }
-  button { margin-top: 5px; border: none; padding: 7px 10px; border-radius: 5px; cursor: pointer; }
-  .delete-btn { background-color: #ff4d4f; color: #fff; }
-  .taken-btn { background-color: #6c757d; color: #fff; }
-  .chat-btn { background-color: #28a745; color: #fff; }
-  .agent-btn { background-color: #007bff; color: #fff; }
-  .whatsapp-btn { background-color: #25D366; color: #fff; }
-  footer { text-align: center; padding: 15px; background: #007bff; color: #fff; margin-top: 40px; }
+/* ===== DARK MODE ===== */
+body {
+  font-family: Arial, sans-serif;
+  background: #0e0e0e;
+  color: #eaeaea;
+  margin: 0;
+}
+
+.navbar {
+  background: #121212;
+  color: #fff;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #222;
+}
+
+.navbar h1 a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.navbar nav a {
+  color: #bbb;
+  margin-left: 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.navbar nav a:hover {
+  color: #fff;
+}
+
+.page-content {
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filters select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background: #1a1a1a;
+  color: #fff;
+}
+
+#listings-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.hostel-card {
+  background: #151515;
+  border-radius: 12px;
+  width: 320px;
+  overflow: hidden;
+  border: 1px solid #222;
+  display: flex;
+  flex-direction: column;
+}
+
+.hostel-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.hostel-content {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hostel-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.hostel-meta {
+  font-size: 13px;
+  color: #aaa;
+}
+
+.hostel-description {
+  font-size: 14px;
+  color: #ddd;
+  margin-top: 5px;
+}
+
+.listing-actions button {
+  margin-top: 6px;
+  border: none;
+  padding: 7px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.delete-btn { background: #ff4d4f; color: #fff; }
+.taken-btn { background: #444; color: #fff; }
+.chat-btn { background: #28a745; color: #fff; }
+.agent-btn { background: #0066ff; color: #fff; }
+.whatsapp-btn { background: #25D366; color: #000; }
+
+footer {
+  text-align: center;
+  padding: 15px;
+  background: #121212;
+  color: #aaa;
+  margin-top: 40px;
+  border-top: 1px solid #222;
+}
 </style>
 </head>
 
@@ -50,17 +153,17 @@
   <div class="filters">
     <select id="typeFilter">
       <option value="">All Types</option>
-      <option>One-room</option>
-      <option>Self-contained</option>
-      <option>Duplex</option>
-      <option>Mini-flat</option>
-      <option>Others</option>
+      <option value="One-room">One-room</option>
+      <option value="Self-contained">Self-contained</option>
+      <option value="Duplex">Duplex</option>
+      <option value="Mini-flat">Mini-flat</option>
+      <option value="Others">Others</option>
     </select>
 
     <select id="locationFilter">
       <option value="">All Locations</option>
-      <option>Abraka Market Road</option>
-      <option>Ekrejeta Area</option>
+      <option value="Abraka Market Road">Abraka Market Road</option>
+      <option value="Ekrejeta Area">Ekrejeta Area</option>
     </select>
 
     <select id="priceFilter">
@@ -71,7 +174,7 @@
     </select>
   </div>
 
-  <div id="listings-container" class="listings-container"></div>
+  <div id="listings-container"></div>
   <div id="message"></div>
 </main>
 
@@ -80,10 +183,12 @@
 </footer>
 
 <script>
+/* ========= CONFIG ========= */
+const API_URL = "/api/hostels";
 let currentUser = null;
 
-/* ===== AUTH ===== */
-async function loadCurrentUser() {
+/* ========= AUTH ========= */
+async function fetchCurrentUser() {
   const token = localStorage.getItem("authToken");
   if (!token) return null;
 
@@ -91,24 +196,22 @@ async function loadCurrentUser() {
     headers: { Authorization: token }
   });
 
-  if (!res.ok) return null;
-  return res.json();
+  return res.ok ? res.json() : null;
 }
 
-/* ===== FETCH HOSTELS ===== */
+/* ========= DATA ========= */
 async function fetchHostels() {
-  const res = await fetch("/api/hostels");
-  if (!res.ok) return [];
-  return res.json();
+  const res = await fetch(API_URL);
+  return res.ok ? res.json() : [];
 }
 
-/* ===== FILTER ===== */
-function applyFilters(list) {
+/* ========= FILTER ========= */
+function applyFilters(hostels) {
   const type = typeFilter.value;
   const location = locationFilter.value;
   const price = priceFilter.value;
 
-  return list.filter(h => {
+  return hostels.filter(h => {
     if (type && h.category !== type) return false;
     if (location && h.location !== location) return false;
     if (price) {
@@ -119,20 +222,18 @@ function applyFilters(list) {
   });
 }
 
-/* ===== RENDER ===== */
-async function renderListings() {
+/* ========= RENDER ========= */
+async function renderHostels() {
   const container = document.getElementById("listings-container");
   container.innerHTML = "Loading...";
 
-  let hostels = await fetchHostels();
-  hostels = applyFilters(hostels);
+  let hostels = applyFilters(await fetchHostels());
+  container.innerHTML = "";
 
   if (!hostels.length) {
     container.innerHTML = "No listings found.";
     return;
   }
-
-  container.innerHTML = "";
 
   hostels.forEach(h => {
     const card = document.createElement("div");
@@ -142,71 +243,66 @@ async function renderListings() {
       <img src="${h.images?.[0] || 'placeholder.jpg'}">
       <div class="hostel-content">
         <div class="hostel-title">${h.name}</div>
-        <div class="hostel-category">Category: ${h.category}</div>
-        <div class="hostel-price">Price: ₦${h.price}</div>
-        <div class="hostel-status">Status: ${h.taken ? "Taken" : "Available"}</div>
+        <div class="hostel-meta">${h.category} • ₦${h.price}</div>
+        <div class="hostel-meta">Status: ${h.taken ? "Taken" : "Available"}</div>
         <div class="hostel-description">${h.description}</div>
+
+        <div class="listing-actions">
+          ${currentUser?.role === "admin" ? `<button class="delete-btn" onclick="deleteListing('${h._id}')">Delete</button>` : ""}
+          ${currentUser?.id === h.ownerId && !h.taken ? `<button class="taken-btn" onclick="markTaken('${h._id}')">Mark Taken</button>` : ""}
+          <button class="chat-btn">Chat</button>
+          <button class="agent-btn">View Agent</button>
+          <button class="whatsapp-btn" onclick="openWhatsApp()">WhatsApp</button>
+        </div>
       </div>
-    `;
-
-    const content = card.querySelector(".hostel-content");
-
-    if (currentUser?.role === "admin") {
-      const del = document.createElement("button");
-      del.className = "delete-btn";
-      del.textContent = "Delete";
-      del.onclick = async () => {
-        if (!confirm("Delete this listing?")) return;
-        await fetch(`/api/hostels?id=${h._id}`, {
-          method: "DELETE",
-          headers: { Authorization: localStorage.getItem("authToken") }
-        });
-        renderListings();
-      };
-      content.appendChild(del);
-    }
-
-    if (currentUser?.id === h.ownerId && !h.taken) {
-      const taken = document.createElement("button");
-      taken.className = "taken-btn";
-      taken.textContent = "Mark Taken";
-      taken.onclick = async () => {
-        await fetch("/api/hostels/taken", {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("authToken")
-          },
-          body: JSON.stringify({ id: h._id })
-        });
-        renderListings();
-      };
-      content.appendChild(taken);
-    }
-
-    content.innerHTML += `
-      <button class="chat-btn">Chat</button>
-      <button class="agent-btn">View Agent</button>
-      <button class="whatsapp-btn"
-        onclick="window.open('https://wa.me/?text=Only%20for%20emergencies')">
-        WhatsApp
-      </button>
     `;
 
     container.appendChild(card);
   });
 }
 
-/* ===== INIT ===== */
-window.addEventListener("DOMContentLoaded", async () => {
-  currentUser = await loadCurrentUser();
-  renderListings();
+/* ========= ACTIONS ========= */
+async function deleteListing(id) {
+  if (!confirm("Delete this listing?")) return;
+  const token = localStorage.getItem("authToken");
 
-  typeFilter.onchange = renderListings;
-  locationFilter.onchange = renderListings;
-  priceFilter.onchange = renderListings;
+  await fetch(`${API_URL}?id=${id}`, {
+    method: "DELETE",
+    headers: { Authorization: token }
+  });
+
+  renderHostels();
+}
+
+async function markTaken(id) {
+  const token = localStorage.getItem("authToken");
+
+  await fetch("/api/hostels/taken", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token
+    },
+    body: JSON.stringify({ id })
+  });
+
+  renderHostels();
+}
+
+function openWhatsApp() {
+  window.open("https://wa.me/?text=Only%20for%20emergencies", "_blank");
+}
+
+/* ========= INIT ========= */
+document.addEventListener("DOMContentLoaded", async () => {
+  currentUser = await fetchCurrentUser();
+  renderHostels();
+
+  typeFilter.onchange = renderHostels;
+  locationFilter.onchange = renderHostels;
+  priceFilter.onchange = renderHostels;
 });
 </script>
 
 </body>
-</html>
+        </html>
