@@ -76,20 +76,28 @@
 </footer>
 
 <script>
-const currentUser = { id: "user123", role: "admin" }; // Replace with real auth
+// === CONFIG ===
+const API_URL = "https://abrakahomes.vercel.app/api/hostels"; // replace with your deployed URL
+const currentUser = { id: "kejicjs11", role: "admin" }; // replace with real auth logic
 
+// === FETCH HOSTELS ===
 async function fetchHostels() {
   try {
-    const res = await fetch("/api/hostels");
+    const res = await fetch(API_URL);
     if (!res.ok) throw new Error("Failed to fetch hostels");
     return await res.json();
-  } catch (err) { console.error(err); return []; }
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
 }
 
+// === FILTER LOGIC ===
 function applyFilters(hostels) {
   const type = document.getElementById("typeFilter").value;
   const location = document.getElementById("locationFilter").value;
   const price = document.getElementById("priceFilter").value;
+
   return hostels.filter(h => {
     if (type && h.category !== type) return false;
     if (location && h.location !== location) return false;
@@ -101,6 +109,7 @@ function applyFilters(hostels) {
   });
 }
 
+// === RENDER HOSTELS ===
 async function renderHostels() {
   const container = document.getElementById("listings-container");
   const message = document.getElementById("message");
@@ -118,12 +127,11 @@ async function renderHostels() {
     card.className = "hostel-card";
 
     const img = document.createElement("img");
-    img.src = hostel.images && hostel.images.length > 0 ? hostel.images[0] : "placeholder.jpg";
+    img.src = hostel.images?.[0] || "placeholder.jpg";
     card.appendChild(img);
 
     const content = document.createElement("div");
     content.className = "hostel-content";
-
     content.innerHTML = `
       <div class="hostel-title">${hostel.name}</div>
       <div class="hostel-category">Category: ${hostel.category}</div>
@@ -132,7 +140,7 @@ async function renderHostels() {
       <div class="hostel-description">${hostel.description}</div>
     `;
 
-    // Buttons
+    // Admin delete button
     if (currentUser.role === "admin") {
       const deleteBtn = document.createElement("button");
       deleteBtn.className = "delete-btn";
@@ -140,7 +148,7 @@ async function renderHostels() {
       deleteBtn.addEventListener("click", async () => {
         if (!confirm("Are you sure?")) return;
         try {
-          await fetch("/api/hostels", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: hostel._id }) });
+          await fetch(API_URL, { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: hostel._id }) });
           card.remove();
           alert("Hostel deleted");
         } catch (err) { console.error(err); alert("Error deleting hostel"); }
@@ -148,13 +156,14 @@ async function renderHostels() {
       content.appendChild(deleteBtn);
     }
 
+    // Owner mark taken
     if (hostel.ownerId === currentUser.id && hostel.status !== "taken") {
       const markTakenBtn = document.createElement("button");
       markTakenBtn.className = "taken-btn";
       markTakenBtn.innerText = "Mark Taken";
       markTakenBtn.addEventListener("click", async () => {
         try {
-          await fetch("/api/hostels", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: hostel._id, action: "markTaken" }) });
+          await fetch(API_URL, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: hostel._id, action: "markTaken" }) });
           markTakenBtn.innerText = "Taken";
           markTakenBtn.disabled = true;
           content.querySelector(".hostel-status").innerText = "Status: taken";
@@ -163,21 +172,21 @@ async function renderHostels() {
       content.appendChild(markTakenBtn);
     }
 
-    // Chat button
+    // Chat
     const chatBtn = document.createElement("button");
     chatBtn.className = "chat-btn";
     chatBtn.innerText = "Chat";
     chatBtn.addEventListener("click", () => alert("Open chat (to be implemented)"));
     content.appendChild(chatBtn);
 
-    // View Agent button
-    const viewAgentprofileBtn = document.createElement("button");
-    viewAgentprofileBtn.className = "agent-btn";
-    viewAgentprofileBtn.innerText = "View Agent";
-    viewAgentprofileBtn.addEventListener("click", () => window.location.href = `/agents/${hostel.agentId}`);
+    // View Agent
+    const viewAgentBtn = document.createElement("button");
+    viewAgentBtn.className = "agent-btn";
+    viewAgentBtn.innerText = "View Agent";
+    viewAgentBtn.addEventListener("click", () => window.location.href = `/agents/${hostel.agentId}`);
     content.appendChild(viewAgentBtn);
 
-    // WhatsApp button
+    // WhatsApp
     const whatsappBtn = document.createElement("button");
     whatsappBtn.className = "whatsapp-btn";
     whatsappBtn.innerText = "WhatsApp";
@@ -191,6 +200,7 @@ async function renderHostels() {
   });
 }
 
+// === INIT ===
 window.addEventListener("DOMContentLoaded", () => {
   renderHostels();
   document.getElementById("typeFilter").addEventListener("change", renderHostels);
@@ -198,5 +208,6 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("priceFilter").addEventListener("change", renderHostels);
 });
 </script>
+
 </body>
-  </html>
+</html>
