@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - Add Hostel</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Add Hostel</h1>
+
+<form id="hostelForm">
+  <label>Hostel Name:</label>
+  <input type="text" id="name" required>
+
+  <label>Location:</label>
+  <input type="text" id="location" required>
+
+  <label>Price:</label>
+  <input type="number" id="price" required>
+
+  <label>Category:</label>
+  <select id="category" required>
+    <option value="One-room">One-room</option>
+    <option value="Self-contained">Self-contained</option>
+    <option value="Duplex">Duplex</option>
+    <option value="Mini-flat">Mini-flat</option>
+    <option value="Others">Others</option>
+  </select>
+
+  <label>Upload Images (3 max, ≤3MB each):</label>
+  <input type="file" id="images" accept="image/*" multiple required>
+
+  <label>Description:</label>
+  <textarea id="description" required></textarea>
+
+  <button type="submit">Add Hostel</button>
+</form>
+
+<div id="message"></div>
+
+<script>
+const cloudName = "dtgybmsbi"; // your Cloudinary cloud name
+const unsignedPreset = "abrakahomes_unsigned"; // your unsigned preset
+
+document.getElementById("hostelForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const message = document.getElementById("message");
+  message.style.color = "black";
+  message.innerText = "Uploading images...";
+
+  const name = document.getElementById("name").value.trim();
+  const location = document.getElementById("location").value.trim();
+  const price = document.getElementById("price").value.trim();
+  const category = document.getElementById("category").value;
+  const description = document.getElementById("description").value.trim();
+  const files = document.getElementById("images").files;
+
+  if (!name || !location || !price || !category || !description || files.length !== 3) {
+    message.style.color = "red";
+    message.innerText = "Please fill all fields and select exactly 3 images.";
+    return;
+  }
+
+  const maxSize = 3 * 1024 * 1024; // 3MB
+  for (let i = 0; i < files.length; i++) {
+    if (files[i].size > maxSize) {
+      message.style.color = "red";
+      message.innerText = `Image ${i + 1} exceeds 3MB limit.`;
+      return;
+    }
+  }
+
+  try {
+    const uploadedUrls = [];
+    for (let i = 0; i < files.length; i++) {
+      const formData = new FormData();
+      formData.append("file", files[i]);
+      formData.append("upload_preset", unsignedPreset);
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+        method: "POST",
+        body: formData
+      });
+      const data = await res.json();
+      uploadedUrls.push(data.secure_url);
+    }
+
+    const res = await fetch("/api/hostels", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, location, price, category, description, images: uploadedUrls })
+    });
+
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || "Failed to add hostel");
+
+    message.style.color = "green";
+    message.innerText = `Hostel added successfully! ID: ${result.id}`;
+    document.getElementById("hostelForm").reset();
+
+  } catch (err) {
+    console.error(err);
+    message.style.color = "red";
+    message.innerText = "Error: " + err.message;
+  }
+});
+</script>
+
+</body>
+  </html>
