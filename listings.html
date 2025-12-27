@@ -78,7 +78,19 @@
 <script>
 // === CONFIG ===
 const API_URL = "https://abrakahomes.vercel.app/api/hostels"; // replace with your deployed URL
-const currentUser = { id: "kejicjs11", role: "admin" }; // replace with real auth logic
+let currentUser = null;
+
+// === FETCH CURRENT USER ===
+async function fetchCurrentUser() {
+  try {
+    const res = await fetch("/api/me"); // backend returns { id, role }
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.error("Error fetching user:", err);
+    return null;
+  }
+}
 
 // === FETCH HOSTELS ===
 async function fetchHostels() {
@@ -141,14 +153,18 @@ async function renderHostels() {
     `;
 
     // Admin delete button
-    if (currentUser.role === "admin") {
+    if (currentUser?.role === "admin") {
       const deleteBtn = document.createElement("button");
       deleteBtn.className = "delete-btn";
       deleteBtn.innerText = "Delete";
       deleteBtn.addEventListener("click", async () => {
         if (!confirm("Are you sure?")) return;
         try {
-          await fetch(API_URL, { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: hostel._id }) });
+          await fetch(API_URL, { 
+            method: "DELETE", 
+            headers: { "Content-Type": "application/json" }, 
+            body: JSON.stringify({ id: hostel._id }) 
+          });
           card.remove();
           alert("Hostel deleted");
         } catch (err) { console.error(err); alert("Error deleting hostel"); }
@@ -157,13 +173,17 @@ async function renderHostels() {
     }
 
     // Owner mark taken
-    if (hostel.ownerId === currentUser.id && hostel.status !== "taken") {
+    if (hostel.ownerId === currentUser?.id && hostel.status !== "taken") {
       const markTakenBtn = document.createElement("button");
       markTakenBtn.className = "taken-btn";
       markTakenBtn.innerText = "Mark Taken";
       markTakenBtn.addEventListener("click", async () => {
         try {
-          await fetch(API_URL, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: hostel._id, action: "markTaken" }) });
+          await fetch(API_URL, { 
+            method: "PATCH", 
+            headers: { "Content-Type": "application/json" }, 
+            body: JSON.stringify({ id: hostel._id, action: "markTaken" }) 
+          });
           markTakenBtn.innerText = "Taken";
           markTakenBtn.disabled = true;
           content.querySelector(".hostel-status").innerText = "Status: taken";
@@ -201,7 +221,8 @@ async function renderHostels() {
 }
 
 // === INIT ===
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
+  currentUser = await fetchCurrentUser(); // get actual user
   renderHostels();
   document.getElementById("typeFilter").addEventListener("change", renderHostels);
   document.getElementById("locationFilter").addEventListener("change", renderHostels);
