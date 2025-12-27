@@ -9,19 +9,23 @@
 <body>
 
   <div class="container">
-    <h1 class="title">Admin Panel - Add Hostel</h1>
+    <h1 class="title">AbrakaHomes Admin Panel</h1>
 
-    <form id="hostelForm" class="form-card">
-      <label for="name">Hostel Name:</label>
+    <form id="hostelForm" class="form-card" enctype="multipart/form-data">
+      <!-- Hostel Name -->
+      <label for="name">Hostel Name</label>
       <input type="text" id="name" placeholder="Enter hostel name" required>
 
-      <label for="location">Location:</label>
+      <!-- Location -->
+      <label for="location">Location</label>
       <input type="text" id="location" placeholder="Enter location" required>
 
-      <label for="price">Price:</label>
+      <!-- Price -->
+      <label for="price">Price</label>
       <input type="number" id="price" placeholder="Enter price" required>
 
-      <label for="category">Category:</label>
+      <!-- Category -->
+      <label for="category">Category</label>
       <select id="category" required>
         <option value="">Select category</option>
         <option value="One Room">One Room</option>
@@ -32,8 +36,23 @@
         <option value="Others">Others</option>
       </select>
 
-      <label for="description">Description:</label>
-      <textarea id="description" placeholder="Describe the hostel, amenities, water, light, distance to school..." required></textarea>
+      <!-- Image Uploads -->
+      <label>Upload Image 1</label>
+      <input type="file" id="image1" accept="image/*" required>
+      
+      <label>Upload Image 2</label>
+      <input type="file" id="image2" accept="image/*" required>
+      
+      <label>Upload Image 3</label>
+      <input type="file" id="image3" accept="image/*" required>
+
+      <!-- Description -->
+      <label for="description">Description</label>
+      <textarea
+        id="description"
+        placeholder="Describe the hostel, amenities, water, light, distance to school..."
+        required
+      ></textarea>
 
       <button type="submit">Add Hostel</button>
 
@@ -43,4 +62,4 @@
 
   <script src="admin.js"></script>
 </body>
-</html>
+        </html>
