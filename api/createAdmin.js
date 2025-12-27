@@ -1,23 +1,25 @@
 const bcrypt = require("bcryptjs");
-const { MongoClient } = require("mongodb");
+const { connectDB } = require("../lib/db");
 
-async function createAdmin() {
-  const client = await MongoClient.connect("YOUR_MONGO_URI");
-  const db = client.db("abrakahomes");
-  const users = db.collection("users");
+module.exports = async (req, res) => {
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const hashedPassword = await bcrypt.hash("YourPassword123", 10);
+  try {
+    const db = await connectDB();
+    const users = db.collection("users");
 
-  await users.insertOne({
-    name: "kejicjs11",
-    email: "kejicjs11@gmail.com",
-    password: hashedPassword,
-    role: "admin",
-    createdAt: new Date()
-  });
+    const passwordHash = await bcrypt.hash("YourPassword123", 10);
 
-  console.log("Admin user created!");
-  client.close();
-}
+    const result = await users.insertOne({
+      name: "Keji",
+      email: "kejicjs11@gmail.com",
+      password: passwordHash,
+      role: "admin"
+    });
 
-createAdmin();
+    res.status(201).json({ message: "Admin created", id: result.insertedId });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
