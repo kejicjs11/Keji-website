@@ -26,13 +26,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Check file size <= 3MB
     const maxSize = 3 * 1024 * 1024; // 3MB
-    for (let i = 0; i < [image1, image2, image3].length; i++) {
-      if ([image1, image2, image3][i].size > maxSize) {
+    [image1, image2, image3].forEach((img, i) => {
+      if (img.size > maxSize) {
         message.style.color = "red";
         message.innerText = `Image ${i + 1} exceeds 3MB limit.`;
         return;
       }
-    }
+    });
 
     try {
       const formData = new FormData();
@@ -40,10 +40,14 @@ document.addEventListener("DOMContentLoaded", () => {
       formData.append("location", location);
       formData.append("price", price);
       formData.append("category", category);
-      formData.append("description", description);
+
+      // Append images first
       formData.append("image1", image1);
       formData.append("image2", image2);
       formData.append("image3", image3);
+
+      // Then description
+      formData.append("description", description);
 
       const res = await fetch("/api/hostels", {
         method: "POST",
