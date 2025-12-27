@@ -381,3 +381,97 @@ body {
   background-position: right 10px center;
   background-size: 10px 6px;
 }
+
+/* General body styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f6f8;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+/* Container */
+.container {
+  width: 90%;
+  max-width: 500px;
+  margin-top: 50px;
+}
+
+/* Title */
+.title {
+  text-align: center;
+  color: #111;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+/* Form card */
+.form-card {
+  background-color: #fff;
+  padding: 25px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Labels */
+.form-card label {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Inputs, selects, and textarea */
+.form-card input,
+.form-card select,
+.form-card textarea {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border 0.2s;
+}
+
+.form-card input:focus,
+.form-card select:focus,
+.form-card textarea:focus {
+  border-color: #111;
+  outline: none;
+}
+
+.form-card textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Button */
+.form-card button {
+  padding: 14px;
+  background-color: #111;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.form-card button:hover {
+  background-color: #333;
+}
+
+/* Message text */
+.message {
+  font-size: 0.95rem;
+  margin-top: 10px;
+  color: green;
+  text-align: center;
+}
