@@ -12,14 +12,14 @@ module.exports = async (req, res) => {
       { 
         id: "kejicjs11", 
         email: "kejicjs11@gmail.com", 
-        password: "YourAdminPassword", // choose a strong password
+        password: "@keji4265", // choose a strong password
         role: "admin", 
         name: "Keji Shaka" 
       },
       { 
         id: "kejicjs11", 
         email: "kejicjs11@gmail.com", 
-        password: "YourOwnerPassword", // another password for owner
+        password: "@Keji4265", // another password for owner
         role: "owner", 
         name: "Keji Shaka" 
       },
