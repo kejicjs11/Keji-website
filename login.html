@@ -1,30 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Login | AbrakaHomes</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | AbrakaHomes</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <header class="navbar">
-    <h1><a href="index.html">AbrakaHomes</a></h1>
-    <nav>
-      <a href="listings.html">Listings</a>
-      <a href="agents.html">Agents</a>
-      <a href="login.html">Login</a>
-    </nav>
-  </header>
+<h1>Login</h1>
+<form id="loginForm">
+  <label>Email:</label>
+  <input type="email" id="email" required>
 
-  <main class="page-content">
-    <h2>Login</h2>
-    <p>User accounts and chat will be added here.</p>
-  </main>
+  <label>Password:</label>
+  <input type="password" id="password" required>
 
-  <footer>
-    <p>© 2025 AbrakaHomes</p>
-  </footer>
+  <button type="submit">Login</button>
+</form>
+
+<div id="message"></div>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const message = document.getElementById("message");
+  message.style.color = "black";
+  message.innerText = "Logging in...";
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  try {
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Login failed");
+
+    // Save user token in localStorage
+    localStorage.setItem("authToken", data.token);
+
+    message.style.color = "green";
+    message.innerText = `Welcome ${data.name}! Redirecting...`;
+    setTimeout(() => window.location.href = "/index.html", 1000);
+
+  } catch (err) {
+    message.style.color = "red";
+    message.innerText = "Error: " + err.message;
+  }
+});
+</script>
 
 </body>
-</html>
+  </html>
