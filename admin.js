@@ -10,33 +10,60 @@ document.addEventListener("DOMContentLoaded", () => {
     const name = document.getElementById("name").value.trim();
     const location = document.getElementById("location").value.trim();
     const price = document.getElementById("price").value.trim();
+    const category = document.getElementById("category").value;
+    const description = document.getElementById("description").value.trim();
 
-    if (!name || !location || !price) {
-      message.innerText = "Please fill all fields";
+    const image1 = document.getElementById("image1").files[0];
+    const image2 = document.getElementById("image2").files[0];
+    const image3 = document.getElementById("image3").files[0];
+
+    // Check required fields
+    if (!name || !location || !price || !category || !description || !image1 || !image2 || !image3) {
+      message.style.color = "red";
+      message.innerText = "Please fill all fields and select all images.";
       return;
     }
 
-    try {
-      const res = await fetch("/api/hostels", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, location, price })
-      });
-
-      if (!res.ok) {
-        const error = await res.text();
-        message.innerText = `Error: ${error}`;
+    // Check file size <= 3MB
+    const maxSize = 3 * 1024 * 1024; // 3MB
+    for (let i = 0; i < [image1, image2, image3].length; i++) {
+      if ([image1, image2, image3][i].size > maxSize) {
+        message.style.color = "red";
+        message.innerText = `Image ${i + 1} exceeds 3MB limit.`;
         return;
       }
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("location", location);
+      formData.append("price", price);
+      formData.append("category", category);
+      formData.append("description", description);
+      formData.append("image1", image1);
+      formData.append("image2", image2);
+      formData.append("image3", image3);
+
+      const res = await fetch("/api/hostels", {
+        method: "POST",
+        body: formData
+      });
 
       const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to add hostel");
+      }
+
+      message.style.color = "green";
       message.innerText = `Hostel added successfully! ID: ${data.id}`;
 
-      // Clear the form
       form.reset();
 
     } catch (err) {
       console.error(err);
+      message.style.color = "red";
       message.innerText = "Failed to add hostel. Check console for details.";
     }
 
