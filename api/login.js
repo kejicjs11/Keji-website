@@ -1,3 +1,15 @@
+let body = req.body;
+
+if (!body) {
+  try {
+    body = JSON.parse(req.body);
+  } catch {
+    return res.status(400).json({ error: "Invalid JSON body" });
+  }
+}
+
+const { email, password } = body;
+
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const cookie = require("cookie");
