@@ -1,40 +1,27 @@
-import bcrypt from "bcryptjs";
-import User from "@/models/User";
-import dbConnect from "@/lib/db";
+const bcrypt = require("bcryptjs");
+const { clientPromise } = require("../../lib/db");
 
-export default async function handler(req, res) {
-  if (req.method !== "POST")
-    return res.status(405).json({ error: "Method not allowed" });
+module.exports = async (req, res) => {
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const { name, email, password, role } = req.body;
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) return res.status(400).json({ error: "Missing fields" });
 
-  if (!name || !email || !password || !role)
-    return res.status(400).json({ error: "All fields required" });
+  try {
+    const client = await clientPromise;
+    const db = client.db("abrakahomes");
+    const users = db.collection("users");
 
-  if (!["user", "agent"].includes(role))
-    return res.status(400).json({ error: "Invalid role" });
+    const existing = await users.findOne({ email });
+    if (existing) return res.status(400).json({ error: "User already exists" });
 
-  await dbConnect();
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  const exists = await User.findOne({ email });
-  if (exists)
-    return res.status(400).json({ error: "Email already registered" });
+    const result = await users.insertOne({ name, email, password: hashedPassword, role: "user" });
 
-  const hashed = await bcrypt.hash(password, 10);
-
-  const user = await User.create({
-    name,
-    email,
-    password: hashed,
-    role
-  });
-
-  res.status(201).json({
-    message: "Signup successful",
-    user: {
-      id: user._id,
-      name: user.name,
-      role: user.role
-    }
-  });
-         }
+    res.status(201).json({ message: "User created", id: result.insertedId });
+  } catch (err) {
+    console.error("SIGNUP ERROR:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
