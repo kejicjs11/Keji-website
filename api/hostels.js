@@ -1,3 +1,7 @@
+console.log("Connecting to MongoDB...");
+const client = await clientPromise;
+console.log("MongoDB connected!");
+
 const { clientPromise } = require("../../lib/db");
 const jwt = require("jsonwebtoken");
 
